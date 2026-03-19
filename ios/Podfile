@@ -1,0 +1,49 @@
+require Pod::Executable.execute_command('node', ['-e',
+  'process.stdout.write(require("path").dirname(require.resolve("react-native/package.json")))'
+]).strip + '/scripts/react_native_pods.rb'
+
+platform :ios, min_ios_version_supported
+prepare_react_native_project!
+
+linkage = ENV['USE_FRAMEWORKS']
+if linkage != nil
+  Pod::UI.puts "Configuring Pod with #{linkage}ally linked Frameworks".green
+  use_frameworks! :linkage => linkage.to_sym
+end
+
+target 'MyStretching' do
+  config = use_native_modules!
+
+  use_react_native!(
+    :path => config[:reactNativePath],
+    :app_path => "#{Pod::Config.instance.installation_root}/.."
+  )
+
+  # Voice
+  pod 'RNVoice', :path => '../node_modules/@react-native-community/voice'
+
+  # TTS
+  pod 'RNTTSP', :path => '../node_modules/react-native-tts'
+
+  # Sound
+  pod 'RNSound', :path => '../node_modules/react-native-sound'
+
+  # Push notifications
+  pod 'RNPushNotification', :path => '../node_modules/react-native-push-notification'
+
+  # Slider
+  pod 'RNCSlider', :path => '../node_modules/@react-native-community/slider'
+
+  target 'MyStretchingTests' do
+    inherit! :complete
+  end
+
+  post_install do |installer|
+    react_native_post_install(installer, config[:reactNativePath], :mac_catalyst_enabled => false)
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.1'
+      end
+    end
+  end
+end
