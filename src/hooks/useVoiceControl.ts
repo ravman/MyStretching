@@ -2,7 +2,7 @@ import {useEffect, useRef, useCallback, useState} from 'react';
 import Voice, {
   SpeechResultsEvent,
   SpeechErrorEvent,
-} from '@react-native-community/voice';
+} from '@react-native-voice/voice';
 import {AppSettings} from '../data/types';
 
 interface VoiceActions {
