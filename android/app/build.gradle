@@ -4,6 +4,7 @@ apply plugin: "com.facebook.react"
 
 react {
     // autolinking handles this
+    autolinkLibrariesWithApp()
 }
 
 android {
@@ -46,6 +47,3 @@ dependencies {
     implementation("com.facebook.react:react-android")
     implementation("com.facebook.react:hermes-android")
 }
-
-apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle")
-applyNativeModulesAppBuildGradle(project)
